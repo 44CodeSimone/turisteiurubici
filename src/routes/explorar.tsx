@@ -51,7 +51,7 @@ function Explorar() {
               value={q}
               onChange={(e) => {
                 setQ(e.target.value);
-                navigate({ search: (s) => ({ ...s, q: e.target.value || undefined }), replace: true });
+                navigate({ search: (s: any) => ({ ...s, q: e.target.value || undefined }), replace: true });
               }}
               placeholder="Buscar por nome…"
               className="w-full rounded-full border border-input bg-background pl-11 pr-4 py-3 text-sm outline-none focus:ring-2 focus:ring-ring"
@@ -60,7 +60,7 @@ function Explorar() {
 
           <div className="mt-5 flex flex-wrap gap-2">
             <button
-              onClick={() => navigate({ search: (s) => ({ ...s, cat: undefined }), replace: true })}
+              onClick={() => navigate({ search: (s: any) => ({ ...s, cat: undefined }), replace: true })}
               className={`rounded-full px-4 py-1.5 text-sm font-medium border transition-smooth ${
                 !cat
                   ? "bg-primary text-primary-foreground border-primary shadow-soft"
@@ -72,7 +72,7 @@ function Explorar() {
             {categorias.map((c) => (
               <button
                 key={c.slug}
-                onClick={() => navigate({ search: (s) => ({ ...s, cat: c.slug }), replace: true })}
+                onClick={() => navigate({ search: (s: any) => ({ ...s, cat: c.slug }), replace: true })}
                 className={`rounded-full px-4 py-1.5 text-sm font-medium border transition-smooth ${
                   cat === c.slug
                     ? "bg-primary text-primary-foreground border-primary shadow-soft"
