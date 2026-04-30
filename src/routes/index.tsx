@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Sparkles, Cloud, MapPin, Star } from "lucide-react";
+import { ArrowRight, Sparkles, Star } from "lucide-react";
 import * as Icons from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ClimaWidget } from "@/components/site/ClimaWidget";
 import { ElzaWidget } from "@/components/site/ElzaWidget";
 import { LocalCard } from "@/components/site/LocalCard";
-import { categorias, getLocaisDestaque, getLocaisPorCategoria } from "@/data/mock";
+import { useData } from "@/data/store";
 import heroImg from "@/assets/hero-urubici.jpg";
 
 export const Route = createFileRoute("/")({
@@ -15,10 +15,14 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const destaques = getLocaisDestaque().slice(0, 6);
-  const gastronomia = getLocaisPorCategoria("gastronomia").slice(0, 3);
-  const hospedagem = getLocaisPorCategoria("hospedagem").slice(0, 3);
-  const eventos = getLocaisPorCategoria("eventos");
+  const data = useData();
+  const ativos = data.locais.filter((l) => l.ativo).sort((a, b) => a.ordem - b.ordem);
+  const destaques = ativos.filter((l) => l.destaque).slice(0, 6);
+  const gastronomia = ativos.filter((l) => l.categoria === "gastronomia").slice(0, 3);
+  const hospedagem = ativos.filter((l) => l.categoria === "hospedagem").slice(0, 3);
+  const eventosAtivos = data.eventos.filter((e) => e.ativo);
+  const bannerMeio = data.banners.find((b) => b.ativo && b.posicao === "home-meio");
+  const categoriasAtivas = data.categorias.filter((c) => c.ativo);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -34,7 +38,7 @@ function Index() {
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-hero-gradient" />
-        <div className="relative mx-auto max-w-7xl px-4 md:px-6 py-24 md:py-36 text-primary-foreground">
+        <div className="relative mx-auto max-w-7xl px-4 md:px-6 py-20 md:py-36 text-primary-foreground">
           <div className="max-w-3xl animate-fade-up">
             <span className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur px-3.5 py-1.5 text-xs font-medium border border-white/20">
               <Sparkles className="h-3.5 w-3.5 text-gold" />
@@ -43,10 +47,7 @@ function Index() {
             <h1 className="mt-5 font-display text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05]">
               Descubra Urubici<br />em um só lugar
             </h1>
-            <p className="mt-5 text-base md:text-lg max-w-xl opacity-95 leading-relaxed">
-              O Turistei Urubici reúne pontos turísticos, hospedagens, gastronomia, eventos e
-              experiências locais — conectando turistas, moradores e negócios.
-            </p>
+            <p className="mt-5 text-base md:text-lg max-w-xl opacity-95 leading-relaxed">{data.config.textoHome}</p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link
                 to="/explorar"
@@ -69,22 +70,20 @@ function Index() {
       </section>
 
       {/* Categorias */}
-      <section className="mx-auto max-w-7xl px-4 md:px-6 py-16 md:py-20">
-        <div className="flex items-end justify-between mb-8 md:mb-10">
-          <div>
-            <h2 className="font-display text-3xl md:text-4xl font-semibold">Explore por categoria</h2>
-            <p className="mt-2 text-muted-foreground">Tudo o que Urubici tem a oferecer, organizado para você.</p>
-          </div>
+      <section className="mx-auto max-w-7xl px-4 md:px-6 py-14 md:py-20">
+        <div className="mb-8 md:mb-10">
+          <h2 className="font-display text-3xl md:text-4xl font-semibold">Explore por categoria</h2>
+          <p className="mt-2 text-muted-foreground">Tudo o que Urubici tem a oferecer, organizado para você.</p>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
-          {categorias.map((c) => {
+          {categoriasAtivas.map((c) => {
             const Icon = (Icons as any)[c.icon] ?? Icons.MapPin;
             return (
               <Link
                 key={c.slug}
                 to="/explorar"
                 search={{ cat: c.slug } as any}
-                className="group flex flex-col items-center gap-2.5 rounded-2xl border border-border bg-card p-4 md:p-5 text-center card-hover"
+                className="group flex flex-col items-center gap-2.5 rounded-2xl border border-border bg-card p-4 md:p-5 text-center card-hover active:scale-[0.98]"
               >
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent text-primary transition-bounce group-hover:bg-primary group-hover:text-primary-foreground">
                   <Icon className="h-5 w-5" />
@@ -97,42 +96,71 @@ function Index() {
       </section>
 
       {/* Destaques */}
-      <section className="mx-auto max-w-7xl px-4 md:px-6 py-10 md:py-14">
-        <div className="flex items-end justify-between mb-8">
-          <div>
-            <h2 className="font-display text-3xl md:text-4xl font-semibold flex items-center gap-2">
-              <Star className="h-7 w-7 text-gold fill-gold" /> Em destaque
-            </h2>
-            <p className="mt-2 text-muted-foreground">Os lugares mais procurados de Urubici neste momento.</p>
+      {destaques.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 md:px-6 py-10 md:py-14">
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <h2 className="font-display text-3xl md:text-4xl font-semibold flex items-center gap-2">
+                <Star className="h-7 w-7 text-gold fill-gold" /> Em destaque
+              </h2>
+              <p className="mt-2 text-muted-foreground">Os lugares mais procurados de Urubici neste momento.</p>
+            </div>
+            <Link to="/explorar" className="hidden md:inline-flex items-center gap-1 text-sm font-medium text-primary hover:gap-2 transition-smooth">
+              Ver todos <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
-          <Link to="/explorar" className="hidden md:inline-flex items-center gap-1 text-sm font-medium text-primary hover:gap-2 transition-smooth">
-            Ver todos <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {destaques.map((l) => (
-            <LocalCard key={l.id} local={l} />
-          ))}
-        </div>
-      </section>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {destaques.map((l) => (
+              <LocalCard key={l.id} local={l} />
+            ))}
+          </div>
+        </section>
+      )}
 
-      {/* Gastronomia */}
-      <SectionStrip
-        titulo="Sabores da Serra"
-        subtitulo="Restaurantes, cafés e culinária local."
-        locais={gastronomia}
-      />
+      {/* Banner do meio */}
+      {bannerMeio && (
+        <section className="mx-auto max-w-7xl px-4 md:px-6 py-6">
+          <a
+            href={bannerMeio.link ?? "#"}
+            className="block relative overflow-hidden rounded-3xl shadow-elegant aspect-[21/9] sm:aspect-[3/1]"
+          >
+            <img src={bannerMeio.imagem} alt={bannerMeio.titulo} className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-hero-gradient" />
+            <div className="relative z-10 h-full flex flex-col justify-center p-6 md:p-10 text-primary-foreground max-w-xl">
+              <h3 className="font-display text-2xl md:text-4xl font-semibold">{bannerMeio.titulo}</h3>
+              {bannerMeio.subtitulo && <p className="mt-2 opacity-90">{bannerMeio.subtitulo}</p>}
+            </div>
+          </a>
+        </section>
+      )}
 
-      {/* Hospedagem */}
-      <SectionStrip
-        titulo="Onde se hospedar"
-        subtitulo="Pousadas e chalés acolhedores."
-        locais={hospedagem}
-      />
+      <SectionStrip titulo="Sabores da Serra" subtitulo="Restaurantes, cafés e culinária local." locais={gastronomia} />
+      <SectionStrip titulo="Onde se hospedar" subtitulo="Pousadas e chalés acolhedores." locais={hospedagem} />
 
       {/* Eventos */}
-      {eventos.length > 0 && (
-        <SectionStrip titulo="Agenda e eventos" subtitulo="O que está acontecendo em Urubici." locais={eventos} />
+      {eventosAtivos.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 md:px-6 py-10 md:py-14">
+          <div className="mb-6">
+            <h2 className="font-display text-2xl md:text-3xl font-semibold">Agenda e eventos</h2>
+            <p className="mt-1 text-muted-foreground text-sm">O que está acontecendo em Urubici.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {eventosAtivos.map((e) => (
+              <article key={e.id} className="rounded-2xl border border-border bg-card overflow-hidden card-hover">
+                {e.imagem && <img src={e.imagem} alt={e.nome} className="aspect-[16/9] w-full object-cover bg-muted" />}
+                <div className="p-4">
+                  <div className="text-xs text-muted-foreground">
+                    {new Date(e.data + "T00:00:00").toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })}
+                    {e.horario && ` • ${e.horario}`}
+                  </div>
+                  <h3 className="font-display text-lg font-semibold mt-1">{e.nome}</h3>
+                  {e.local && <div className="text-xs text-muted-foreground mt-0.5">{e.local}</div>}
+                  <p className="text-sm text-muted-foreground line-clamp-2 mt-2">{e.descricao}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
       )}
 
       {/* CTA empresas */}
@@ -147,8 +175,7 @@ function Index() {
               Divulgue seu negócio no Turistei Urubici
             </h3>
             <p className="mt-3 opacity-90 leading-relaxed">
-              Apareça para turistas e moradores no momento certo. Tenha página própria, contato
-              direto pelo WhatsApp e destaque por categoria.
+              Apareça para turistas e moradores no momento certo. Tenha página própria, contato direto pelo WhatsApp e destaque por categoria.
             </p>
             <Link
               to="/empresas"
@@ -160,25 +187,23 @@ function Index() {
         </div>
       </section>
 
-      {/* FAQ rápido */}
-      <section className="mx-auto max-w-4xl px-4 md:px-6 py-10 md:py-16">
-        <h2 className="font-display text-3xl md:text-4xl font-semibold text-center">Perguntas frequentes</h2>
-        <div className="mt-8 space-y-3">
-          {[
-            { q: "Qual é a melhor época para visitar Urubici?", a: "O inverno (junho a agosto) é o mais procurado pelo frio intenso e neve ocasional. Primavera e verão também são ótimos pelas cachoeiras cheias e lavandas em flor." },
-            { q: "Como me locomovo entre os pontos turísticos?", a: "A maioria dos atrativos exige carro próprio ou contratação de transfer/turismo receptivo. Algumas estradas são de chão." },
-            { q: "Como cadastro meu negócio?", a: "Acesse a página 'Para empresas' e escolha o plano ideal. Em seguida nossa equipe entra em contato." },
-          ].map((f) => (
-            <details key={f.q} className="group rounded-2xl border border-border bg-card p-5 transition-smooth open:shadow-soft">
-              <summary className="cursor-pointer list-none flex items-center justify-between gap-4 font-medium">
-                {f.q}
-                <span className="text-primary transition-bounce group-open:rotate-45">+</span>
-              </summary>
-              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{f.a}</p>
-            </details>
-          ))}
-        </div>
-      </section>
+      {/* FAQ dinâmico */}
+      {data.config.faq.length > 0 && (
+        <section className="mx-auto max-w-4xl px-4 md:px-6 py-10 md:py-16">
+          <h2 className="font-display text-3xl md:text-4xl font-semibold text-center">Perguntas frequentes</h2>
+          <div className="mt-8 space-y-3">
+            {data.config.faq.map((f) => (
+              <details key={f.id} className="group rounded-2xl border border-border bg-card p-5 transition-smooth open:shadow-soft">
+                <summary className="cursor-pointer list-none flex items-center justify-between gap-4 font-medium">
+                  {f.pergunta}
+                  <span className="text-primary transition-bounce group-open:rotate-45">+</span>
+                </summary>
+                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{f.resposta}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      )}
 
       <Footer />
       <ElzaWidget />

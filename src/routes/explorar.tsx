@@ -5,11 +5,11 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ElzaWidget } from "@/components/site/ElzaWidget";
 import { LocalCard } from "@/components/site/LocalCard";
-import { categorias, locais, type Categoria } from "@/data/mock";
+import { useData } from "@/data/store";
 
 export const Route = createFileRoute("/explorar")({
   validateSearch: (s: Record<string, unknown>) => ({
-    cat: typeof s.cat === "string" ? (s.cat as Categoria) : undefined,
+    cat: typeof s.cat === "string" ? s.cat : undefined,
     q: typeof s.q === "string" ? s.q : undefined,
   }),
   component: Explorar,
@@ -22,30 +22,34 @@ export const Route = createFileRoute("/explorar")({
 });
 
 function Explorar() {
+  const data = useData();
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
   const [q, setQ] = useState(search.q ?? "");
   const cat = search.cat;
 
   const filtrados = useMemo(() => {
-    return locais.filter((l) => {
-      if (!l.ativo) return false;
-      if (cat && l.categoria !== cat) return false;
-      if (q && !`${l.nome} ${l.descricaoCurta}`.toLowerCase().includes(q.toLowerCase())) return false;
-      return true;
-    });
-  }, [cat, q]);
+    return data.locais
+      .filter((l) => l.ativo)
+      .filter((l) => (cat ? l.categoria === cat : true))
+      .filter((l) =>
+        q ? `${l.nome} ${l.descricaoCurta}`.toLowerCase().includes(q.toLowerCase()) : true,
+      )
+      .sort((a, b) => a.ordem - b.ordem);
+  }, [data.locais, cat, q]);
+
+  const categoriasAtivas = data.categorias.filter((c) => c.ativo);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
       <section className="border-b border-border bg-soft-gradient">
-        <div className="mx-auto max-w-7xl px-4 md:px-6 py-10 md:py-14">
+        <div className="mx-auto max-w-7xl px-4 md:px-6 py-8 md:py-14">
           <h1 className="font-display text-3xl md:text-5xl font-semibold">Explorar Urubici</h1>
           <p className="mt-2 text-muted-foreground">Filtre por categoria ou busque pelo nome do local.</p>
 
-          <div className="mt-6 relative max-w-xl">
+          <div className="mt-5 relative max-w-xl">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
               value={q}
@@ -58,10 +62,10 @@ function Explorar() {
             />
           </div>
 
-          <div className="mt-5 flex flex-wrap gap-2">
+          <div className="mt-5 flex flex-nowrap md:flex-wrap gap-2 overflow-x-auto -mx-4 px-4 pb-1 md:overflow-visible md:mx-0 md:px-0">
             <button
               onClick={() => navigate({ search: (s: any) => ({ ...s, cat: undefined }), replace: true })}
-              className={`rounded-full px-4 py-1.5 text-sm font-medium border transition-smooth ${
+              className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium border transition-smooth ${
                 !cat
                   ? "bg-primary text-primary-foreground border-primary shadow-soft"
                   : "bg-card border-border hover:border-primary/40"
@@ -69,11 +73,11 @@ function Explorar() {
             >
               Todos
             </button>
-            {categorias.map((c) => (
+            {categoriasAtivas.map((c) => (
               <button
                 key={c.slug}
                 onClick={() => navigate({ search: (s: any) => ({ ...s, cat: c.slug }), replace: true })}
-                className={`rounded-full px-4 py-1.5 text-sm font-medium border transition-smooth ${
+                className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium border transition-smooth ${
                   cat === c.slug
                     ? "bg-primary text-primary-foreground border-primary shadow-soft"
                     : "bg-card border-border hover:border-primary/40"
@@ -88,9 +92,7 @@ function Explorar() {
 
       <section className="mx-auto max-w-7xl w-full px-4 md:px-6 py-10 flex-1">
         {filtrados.length === 0 ? (
-          <div className="text-center py-20 text-muted-foreground">
-            Nenhum local encontrado com esses filtros.
-          </div>
+          <div className="text-center py-20 text-muted-foreground">Nenhum local encontrado com esses filtros.</div>
         ) : (
           <>
             <div className="text-sm text-muted-foreground mb-4">{filtrados.length} resultado(s)</div>
