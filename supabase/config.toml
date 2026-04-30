@@ -1,0 +1,4 @@
+project_id = "hajsfjmdklrueohnwske"
+
+[functions.elza-chat]
+verify_jwt = false
