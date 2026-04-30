@@ -1,8 +1,9 @@
-// Wrapper de compatibilidade com a API anterior do mock.
-// Mantém imports existentes funcionando enquanto migramos para repo.ts.
+// Wrapper de compatibilidade — re-exporta tipos e funções do repo.
+// As páginas devem migrar para useData() (reatividade) ou repo.ts (server snapshot).
+export type { Local, Categoria, Plano } from "./types";
+export type { CategoriaItem as CategoriaInfo } from "./types";
 
-export type { Local, Categoria, Plano, CategoriaItem as CategoriaInfo } from "./types";
-
+import type { CategoriaItem, Local } from "./types";
 import {
   listCategoriasAtivas,
   listLocais,
@@ -12,20 +13,9 @@ import {
   getCategoria,
 } from "./repo";
 
-// Estes "getters" são funções para ser sempre frescas (lidas do store).
-export const categorias = new Proxy([] as any, {
-  get(_t, prop) {
-    const arr = listCategoriasAtivas();
-    return (arr as any)[prop];
-  },
-});
-
-export const locais = new Proxy([] as any, {
-  get(_t, prop) {
-    const arr = listLocais();
-    return (arr as any)[prop];
-  },
-});
+// Snapshot helpers (compatibilidade com código que esperava arrays).
+export const categorias: CategoriaItem[] = listCategoriasAtivas();
+export const locais: Local[] = listLocais();
 
 export const getLocaisDestaque = listLocaisDestaque;
 export const getLocaisPorCategoria = listLocaisPorCategoria;
