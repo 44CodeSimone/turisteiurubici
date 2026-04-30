@@ -1,9 +1,10 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft, MapPin, Phone, MessageCircle, Instagram, Globe, Clock, Mountain, Calendar, ShieldAlert, Sparkles } from "lucide-react";
+import { ArrowLeft, MapPin, Phone, MessageCircle, Instagram, Globe, Clock, Mountain, Calendar, ShieldAlert, Sparkles, Mail } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ElzaWidget } from "@/components/site/ElzaWidget";
-import { getLocalPorSlug, getCategoria } from "@/data/mock";
+import { useData } from "@/data/store";
+import { getLocalPorSlug, getCategoria } from "@/data/repo";
 import { googleMapsUrl, wazeUrl, whatsappUrl } from "@/lib/maps";
 
 export const Route = createFileRoute("/local/$slug")({
@@ -50,7 +51,11 @@ export const Route = createFileRoute("/local/$slug")({
 });
 
 function Detalhes() {
-  const { local } = Route.useLoaderData();
+  const { slug } = Route.useParams();
+  // Reativo: re-renderiza quando o admin altera o item.
+  const data = useData();
+  const local = data.locais.find((l) => l.slug === slug) ?? Route.useLoaderData().local;
+
   const cat = getCategoria(local.categoria);
   const isPonto = local.categoria === "pontos-turisticos";
 
@@ -67,11 +72,7 @@ function Detalhes() {
           <div className="hidden md:grid grid-rows-2 gap-1">
             {[0, 1].map((i) => (
               <div key={i} className="bg-muted overflow-hidden">
-                <img
-                  src={local.imagens[i + 1] ?? local.imagens[0]}
-                  alt={local.nome}
-                  className="h-full w-full object-cover"
-                />
+                <img src={local.imagens[i + 1] ?? local.imagens[0]} alt={local.nome} className="h-full w-full object-cover" />
               </div>
             ))}
           </div>
@@ -102,18 +103,10 @@ function Detalhes() {
 
           {isPonto && (
             <div className="mt-8 grid sm:grid-cols-2 gap-3">
-              {local.dificuldade && (
-                <InfoTile icon={Mountain} label="Dificuldade" value={local.dificuldade} />
-              )}
-              {local.valorEntrada && (
-                <InfoTile icon={Calendar} label="Entrada" value={local.valorEntrada} />
-              )}
-              {local.melhorEpoca && (
-                <InfoTile icon={Calendar} label="Melhor época" value={local.melhorEpoca} />
-              )}
-              {local.estrutura && (
-                <InfoTile icon={Sparkles} label="Estrutura" value={local.estrutura} />
-              )}
+              {local.dificuldade && <InfoTile icon={Mountain} label="Dificuldade" value={local.dificuldade} />}
+              {local.valorEntrada && <InfoTile icon={Calendar} label="Entrada" value={local.valorEntrada} />}
+              {local.melhorEpoca && <InfoTile icon={Calendar} label="Melhor época" value={local.melhorEpoca} />}
+              {local.estrutura && <InfoTile icon={Sparkles} label="Estrutura" value={local.estrutura} />}
               {local.cuidados && (
                 <div className="sm:col-span-2 rounded-2xl border border-gold/40 bg-gold/10 p-4 flex gap-3">
                   <ShieldAlert className="h-5 w-5 text-gold-foreground mt-0.5 shrink-0" />
@@ -127,7 +120,6 @@ function Detalhes() {
           )}
         </article>
 
-        {/* Sidebar */}
         <aside className="space-y-4 lg:sticky lg:top-20 self-start">
           <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
             <h3 className="font-display text-lg font-semibold">Informações</h3>
@@ -136,9 +128,8 @@ function Detalhes() {
               {local.horario && <Row icon={Clock} text={local.horario} />}
               {local.telefone && <Row icon={Phone} text={local.telefone} />}
               {local.instagram && <Row icon={Instagram} text={local.instagram} />}
-              {local.site && (
-                <Row icon={Globe} text={<a href={local.site} className="text-primary hover:underline" target="_blank" rel="noreferrer">{local.site}</a>} />
-              )}
+              {local.email && <Row icon={Mail} text={local.email} />}
+              {local.site && <Row icon={Globe} text={<a href={local.site} className="text-primary hover:underline" target="_blank" rel="noreferrer">{local.site}</a>} />}
             </dl>
 
             <div className="mt-5 grid gap-2">
@@ -146,7 +137,7 @@ function Detalhes() {
                 href={googleMapsUrl(local.latitude, local.longitude, local.nome)}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-primary-gradient px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft transition-bounce hover:scale-[1.02]"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-primary-gradient px-4 py-3 text-sm font-semibold text-primary-foreground shadow-soft transition-bounce hover:scale-[1.02] active:scale-[0.98]"
               >
                 <MapPin className="h-4 w-4" /> Como chegar (Google Maps)
               </a>
@@ -154,7 +145,7 @@ function Detalhes() {
                 href={wazeUrl(local.latitude, local.longitude)}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-medium hover:bg-accent transition-smooth"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-card px-4 py-3 text-sm font-medium hover:bg-accent transition-smooth"
               >
                 Abrir no Waze
               </a>
@@ -163,7 +154,7 @@ function Detalhes() {
                   href={whatsappUrl(local.whatsapp, `Olá! Vi ${local.nome} no Turistei Urubici.`)}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-secondary px-4 py-2.5 text-sm font-semibold text-secondary-foreground shadow-soft transition-bounce hover:scale-[1.02]"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-secondary px-4 py-3 text-sm font-semibold text-secondary-foreground shadow-soft transition-bounce hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <MessageCircle className="h-4 w-4" /> WhatsApp
                 </a>
@@ -206,7 +197,7 @@ function Row({ icon: Icon, text }: { icon: any; text: React.ReactNode }) {
   return (
     <div className="flex items-start gap-2.5">
       <Icon className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
-      <div className="text-foreground/85">{text}</div>
+      <div className="text-foreground/85 break-words">{text}</div>
     </div>
   );
 }

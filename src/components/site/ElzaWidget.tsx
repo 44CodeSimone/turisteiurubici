@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { MessageCircle, X, Send, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useData } from "@/data/store";
 
 interface Msg { role: "user" | "assistant"; content: string; }
 
@@ -11,6 +12,7 @@ const SAUDACAO: Msg = {
 };
 
 export function ElzaWidget() {
+  const data = useData();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([SAUDACAO]);
   const [input, setInput] = useState("");
@@ -34,11 +36,14 @@ export function ElzaWidget() {
     inputRef.current?.focus();
 
     try {
-      const { data, error } = await supabase.functions.invoke("elza-chat", {
-        body: { messages: next },
+      const locaisCtx = data.locais
+        .filter((l) => l.ativo)
+        .map((l) => ({ nome: l.nome, categoria: l.categoria, descricaoCurta: l.descricaoCurta }));
+      const { data: resp, error } = await supabase.functions.invoke("elza-chat", {
+        body: { messages: next, locais: locaisCtx },
       });
       if (error) throw error;
-      const reply = (data as any)?.reply ?? "Desculpe, tive um probleminha agora. Pode tentar novamente?";
+      const reply = (resp as any)?.reply ?? "Desculpe, tive um probleminha agora. Pode tentar novamente?";
       setMessages((m) => [...m, { role: "assistant", content: reply }]);
     } catch (err) {
       console.error(err);

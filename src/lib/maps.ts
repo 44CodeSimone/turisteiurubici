@@ -1,6 +1,13 @@
-export function googleMapsUrl(lat: number, lng: number, label?: string) {
-  const q = label ? `${encodeURIComponent(label)}@${lat},${lng}` : `${lat},${lng}`;
-  return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&destination_place_id=${encodeURIComponent(label ?? "")}`;
+// Helpers de URLs externas para mapas e WhatsApp.
+
+export function googleMapsUrl(lat: number, lng: number, _label?: string) {
+  // Abre rota direta no Google Maps a partir da localização do usuário.
+  return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
+}
+
+export function googleMapsViewUrl(lat: number, lng: number) {
+  // Apenas visualizar o ponto (sem rota).
+  return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 }
 
 export function wazeUrl(lat: number, lng: number) {
