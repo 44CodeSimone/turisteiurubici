@@ -16,6 +16,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as LocalSlugRouteImport } from './routes/local.$slug'
 import { Route as AdminPontosRouteImport } from './routes/admin.pontos'
+import { Route as AdminPlanosRouteImport } from './routes/admin.planos'
 import { Route as AdminEventosRouteImport } from './routes/admin.eventos'
 import { Route as AdminEmpresasRouteImport } from './routes/admin.empresas'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
@@ -57,6 +58,11 @@ const AdminPontosRoute = AdminPontosRouteImport.update({
   path: '/pontos',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminPlanosRoute = AdminPlanosRouteImport.update({
+  id: '/planos',
+  path: '/planos',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminEventosRoute = AdminEventosRouteImport.update({
   id: '/eventos',
   path: '/eventos',
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/admin/config': typeof AdminConfigRoute
   '/admin/empresas': typeof AdminEmpresasRoute
   '/admin/eventos': typeof AdminEventosRoute
+  '/admin/planos': typeof AdminPlanosRoute
   '/admin/pontos': typeof AdminPontosRoute
   '/local/$slug': typeof LocalSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/admin/config': typeof AdminConfigRoute
   '/admin/empresas': typeof AdminEmpresasRoute
   '/admin/eventos': typeof AdminEventosRoute
+  '/admin/planos': typeof AdminPlanosRoute
   '/admin/pontos': typeof AdminPontosRoute
   '/local/$slug': typeof LocalSlugRoute
   '/admin': typeof AdminIndexRoute
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   '/admin/config': typeof AdminConfigRoute
   '/admin/empresas': typeof AdminEmpresasRoute
   '/admin/eventos': typeof AdminEventosRoute
+  '/admin/planos': typeof AdminPlanosRoute
   '/admin/pontos': typeof AdminPontosRoute
   '/local/$slug': typeof LocalSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
     | '/admin/config'
     | '/admin/empresas'
     | '/admin/eventos'
+    | '/admin/planos'
     | '/admin/pontos'
     | '/local/$slug'
     | '/admin/'
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/admin/config'
     | '/admin/empresas'
     | '/admin/eventos'
+    | '/admin/planos'
     | '/admin/pontos'
     | '/local/$slug'
     | '/admin'
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/admin/config'
     | '/admin/empresas'
     | '/admin/eventos'
+    | '/admin/planos'
     | '/admin/pontos'
     | '/local/$slug'
     | '/admin/'
@@ -228,6 +240,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPontosRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/planos': {
+      id: '/admin/planos'
+      path: '/planos'
+      fullPath: '/admin/planos'
+      preLoaderRoute: typeof AdminPlanosRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/eventos': {
       id: '/admin/eventos'
       path: '/eventos'
@@ -272,6 +291,7 @@ interface AdminRouteChildren {
   AdminConfigRoute: typeof AdminConfigRoute
   AdminEmpresasRoute: typeof AdminEmpresasRoute
   AdminEventosRoute: typeof AdminEventosRoute
+  AdminPlanosRoute: typeof AdminPlanosRoute
   AdminPontosRoute: typeof AdminPontosRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -282,6 +302,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminConfigRoute: AdminConfigRoute,
   AdminEmpresasRoute: AdminEmpresasRoute,
   AdminEventosRoute: AdminEventosRoute,
+  AdminPlanosRoute: AdminPlanosRoute,
   AdminPontosRoute: AdminPontosRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
