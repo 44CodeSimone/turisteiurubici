@@ -37,7 +37,13 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { messages } = await req.json();
+    const { messages, locais } = await req.json();
+    const contextoLocais = Array.isArray(locais) && locais.length > 0
+      ? `\n\nLOCAIS CADASTRADOS NA PLATAFORMA (priorize sugerir estes):\n${locais
+          .slice(0, 40)
+          .map((l: any) => `- ${l.nome} (${l.categoria})${l.descricaoCurta ? `: ${l.descricaoCurta}` : ""}`)
+          .join("\n")}`
+      : "";
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       return new Response(
@@ -55,7 +61,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
-          { role: "system", content: SYSTEM_PROMPT },
+          { role: "system", content: SYSTEM_PROMPT + contextoLocais },
           ...(Array.isArray(messages) ? messages : []),
         ],
       }),
