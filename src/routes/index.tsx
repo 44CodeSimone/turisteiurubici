@@ -31,13 +31,18 @@ function Index() {
       {/* Hero */}
       <section className="relative overflow-hidden">
         <img
-          src={heroImg}
+          src={data.config.heroImagem || heroImg}
           alt="Vista da Serra Catarinense em Urubici ao amanhecer"
           width={1920}
           height={1024}
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-hero-gradient" />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(135deg, color-mix(in oklab, var(--primary) ${Math.round((data.config.heroOverlayOpacity ?? 0.55) * 100)}%, transparent), color-mix(in oklab, var(--secondary) ${Math.round((data.config.heroOverlayOpacity ?? 0.55) * 70)}%, transparent))`,
+          }}
+        />
         <div className="relative mx-auto max-w-7xl px-4 md:px-6 py-20 md:py-36 text-primary-foreground">
           <div className="max-w-3xl animate-fade-up">
             <span className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur px-3.5 py-1.5 text-xs font-medium border border-white/20">
@@ -45,12 +50,13 @@ function Index() {
               Serra Catarinense • Brasil
             </span>
             <h1 className="mt-5 font-display text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05]">
-              Descubra Urubici<br />em um só lugar
+              {data.config.heroTitulo || "Descubra Urubici em um só lugar"}
             </h1>
-            <p className="mt-5 text-base md:text-lg max-w-xl opacity-95 leading-relaxed">{data.config.textoHome}</p>
+            <p className="mt-5 text-base md:text-lg max-w-xl opacity-95 leading-relaxed">{data.config.heroSubtitulo || data.config.textoHome}</p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link
                 to="/explorar"
+                search={{ cat: undefined, q: undefined } as any}
                 className="inline-flex items-center gap-2 rounded-full bg-gold-gradient px-6 py-3.5 text-sm font-semibold text-gold-foreground shadow-elegant transition-bounce hover:scale-105 active:scale-95"
               >
                 Explorar a cidade <ArrowRight className="h-4 w-4" />
@@ -105,7 +111,7 @@ function Index() {
               </h2>
               <p className="mt-2 text-muted-foreground">Os lugares mais procurados de Urubici neste momento.</p>
             </div>
-            <Link to="/explorar" className="hidden md:inline-flex items-center gap-1 text-sm font-medium text-primary hover:gap-2 transition-smooth">
+            <Link to="/explorar" search={{ cat: undefined, q: undefined } as any} className="hidden md:inline-flex items-center gap-1 text-sm font-medium text-primary hover:gap-2 transition-smooth">
               Ver todos <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

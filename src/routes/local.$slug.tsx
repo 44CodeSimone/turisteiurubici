@@ -21,7 +21,7 @@ export const Route = createFileRoute("/local/$slug")({
         <div className="text-center max-w-md">
           <h1 className="font-display text-3xl font-semibold">Local não encontrado</h1>
           <p className="mt-2 text-muted-foreground">Esse local pode ter sido removido ou o endereço está incorreto.</p>
-          <Link to="/explorar" className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
+          <Link to="/explorar" search={{ cat: undefined, q: undefined } as any} className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
             Voltar para Explorar
           </Link>
         </div>
@@ -81,7 +81,7 @@ function Detalhes() {
 
       <main className="mx-auto max-w-6xl w-full px-4 md:px-6 py-8 md:py-12 grid lg:grid-cols-3 gap-8">
         <article className="lg:col-span-2">
-          <Link to="/explorar" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-smooth">
+          <Link to="/explorar" search={{ cat: undefined, q: undefined } as any} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-smooth">
             <ArrowLeft className="h-4 w-4" /> Voltar
           </Link>
 
@@ -149,9 +149,9 @@ function Detalhes() {
               >
                 Abrir no Waze
               </a>
-              {local.whatsapp && (
+              {(local.whatsapp || data.config.whatsapp) && (
                 <a
-                  href={whatsappUrl(local.whatsapp, `Olá! Vi ${local.nome} no Turistei Urubici.`)}
+                  href={whatsappUrl(local.whatsapp || data.config.whatsapp, data.config.whatsappMensagem || `Olá! Vi ${local.nome} no Turistei Urubici.`)}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-secondary px-4 py-3 text-sm font-semibold text-secondary-foreground shadow-soft transition-bounce hover:scale-[1.02] active:scale-[0.98]"
