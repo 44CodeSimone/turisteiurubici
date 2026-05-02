@@ -8,7 +8,7 @@ interface Msg { role: "user" | "assistant"; content: string; }
 const SAUDACAO: Msg = {
   role: "assistant",
   content:
-    "Olá, eu sou a Elza, assistente turística do Turistei Urubici. Posso te ajudar a descobrir pontos turísticos, lugares para comer, hospedagens, eventos e experiências pela cidade. O que você gostaria de conhecer hoje?",
+    "Oi! Eu sou a Elza 💚 Posso te ajudar a descobrir Urubici — pontos turísticos, onde comer, dormir, eventos e experiências. O que você procura hoje?",
 };
 
 export function ElzaWidget() {
