@@ -1,39 +1,31 @@
-// Widget de clima.
-// Estrutura preparada para integrar com OpenWeather (ou similar) no futuro.
-// Hoje usa dados mock — bastará trocar a função fetchClima.
-
+// Widget de clima — fallback elegante quando não há API.
 import { useEffect, useState } from "react";
-import { Cloud, CloudRain, Sun, CloudSnow, CloudFog, Loader2 } from "lucide-react";
+import { Cloud, CloudRain, Sun, CloudSnow, CloudFog } from "lucide-react";
 
 export interface ClimaInfo {
   temperatura: number;
   condicao: string;
-  min: number;
-  max: number;
   cidade: string;
 }
 
-const MOCK_CLIMA: ClimaInfo = {
+// Estimativa típica de Urubici (média anual ~14°C). Substitua por API quando disponível.
+const FALLBACK: ClimaInfo = {
   temperatura: 14,
-  condicao: "parcialmente nublado",
-  min: 8,
-  max: 19,
+  condicao: "tempo serrano",
   cidade: "Urubici, SC",
 };
 
-// Hook substituível: troque por fetch real quando houver API key.
-async function fetchClima(): Promise<ClimaInfo> {
-  // TODO: integrar com OpenWeather usando edge function ou API pública.
-  // Exemplo: const r = await fetch(`/api/public/clima`); return await r.json();
-  return new Promise((res) => setTimeout(() => res(MOCK_CLIMA), 300));
+async function fetchClima(): Promise<ClimaInfo | null> {
+  // TODO: integrar com OpenWeather via /api/public/clima
+  return null;
 }
 
 function iconePara(c: string) {
   const s = c.toLowerCase();
   if (s.includes("chuva")) return CloudRain;
   if (s.includes("neve")) return CloudSnow;
-  if (s.includes("neblina")) return CloudFog;
-  if (s.includes("nublado")) return s.includes("parcialmente") ? Cloud : CloudFog;
+  if (s.includes("neblina") || s.includes("serrano")) return CloudFog;
+  if (s.includes("nublado")) return Cloud;
   return Sun;
 }
 
@@ -42,27 +34,15 @@ interface Props {
 }
 
 export function ClimaWidget({ variant = "compact" }: Props) {
-  const [clima, setClima] = useState<ClimaInfo | null>(null);
+  const [clima, setClima] = useState<ClimaInfo>(FALLBACK);
 
   useEffect(() => {
     let alive = true;
-    fetchClima().then((c) => alive && setClima(c));
-    return () => {
-      alive = false;
-    };
+    fetchClima().then((c) => {
+      if (alive && c) setClima(c);
+    }).catch(() => {});
+    return () => { alive = false; };
   }, []);
-
-  if (!clima) {
-    if (variant === "hero") {
-      return (
-        <div className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur-xl text-primary-foreground">
-          <Loader2 className="h-4 w-4 animate-spin" />
-          <span className="text-sm">Carregando clima…</span>
-        </div>
-      );
-    }
-    return null;
-  }
 
   const Icon = iconePara(clima.condicao);
 

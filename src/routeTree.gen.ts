@@ -9,6 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermosRouteImport } from './routes/termos'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as ExplorarRouteImport } from './routes/explorar'
 import { Route as EmpresasRouteImport } from './routes/empresas'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -23,6 +26,21 @@ import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminCategoriasRouteImport } from './routes/admin.categorias'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
 
+const TermosRoute = TermosRouteImport.update({
+  id: '/termos',
+  path: '/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExplorarRoute = ExplorarRouteImport.update({
   id: '/explorar',
   path: '/explorar',
@@ -94,6 +112,9 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/empresas': typeof EmpresasRoute
   '/explorar': typeof ExplorarRoute
+  '/login': typeof LoginRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/termos': typeof TermosRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categorias': typeof AdminCategoriasRoute
   '/admin/config': typeof AdminConfigRoute
@@ -108,6 +129,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/empresas': typeof EmpresasRoute
   '/explorar': typeof ExplorarRoute
+  '/login': typeof LoginRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/termos': typeof TermosRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categorias': typeof AdminCategoriasRoute
   '/admin/config': typeof AdminConfigRoute
@@ -124,6 +148,9 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/empresas': typeof EmpresasRoute
   '/explorar': typeof ExplorarRoute
+  '/login': typeof LoginRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/termos': typeof TermosRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categorias': typeof AdminCategoriasRoute
   '/admin/config': typeof AdminConfigRoute
@@ -141,6 +168,9 @@ export interface FileRouteTypes {
     | '/admin'
     | '/empresas'
     | '/explorar'
+    | '/login'
+    | '/privacidade'
+    | '/termos'
     | '/admin/banners'
     | '/admin/categorias'
     | '/admin/config'
@@ -155,6 +185,9 @@ export interface FileRouteTypes {
     | '/'
     | '/empresas'
     | '/explorar'
+    | '/login'
+    | '/privacidade'
+    | '/termos'
     | '/admin/banners'
     | '/admin/categorias'
     | '/admin/config'
@@ -170,6 +203,9 @@ export interface FileRouteTypes {
     | '/admin'
     | '/empresas'
     | '/explorar'
+    | '/login'
+    | '/privacidade'
+    | '/termos'
     | '/admin/banners'
     | '/admin/categorias'
     | '/admin/config'
@@ -186,11 +222,35 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   EmpresasRoute: typeof EmpresasRoute
   ExplorarRoute: typeof ExplorarRoute
+  LoginRoute: typeof LoginRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
+  TermosRoute: typeof TermosRoute
   LocalSlugRoute: typeof LocalSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/termos': {
+      id: '/termos'
+      path: '/termos'
+      fullPath: '/termos'
+      preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/explorar': {
       id: '/explorar'
       path: '/explorar'
@@ -314,6 +374,9 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   EmpresasRoute: EmpresasRoute,
   ExplorarRoute: ExplorarRoute,
+  LoginRoute: LoginRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
+  TermosRoute: TermosRoute,
   LocalSlugRoute: LocalSlugRoute,
 }
 export const routeTree = rootRouteImport
