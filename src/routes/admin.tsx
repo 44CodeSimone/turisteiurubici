@@ -1,22 +1,14 @@
-import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouterState, useNavigate } from "@tanstack/react-router";
 import {
-  LayoutDashboard,
-  Building2,
-  Mountain,
-  Calendar,
-  Image as ImageIcon,
-  Tags,
-  Settings,
-  ArrowLeft,
-  Menu,
-  X,
-  Sparkles,
+  LayoutDashboard, Building2, Mountain, Calendar, Image as ImageIcon, Tags, Settings,
+  ArrowLeft, Menu, X, Sparkles, LogOut, ShieldAlert,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/admin")({
   component: AdminLayout,
-  head: () => ({ meta: [{ title: "Admin — Turistei Urubici" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Admin — Turistei Urubici" }, { name: "robots", content: "noindex, nofollow" }] }),
 });
 
 const navItems = [
@@ -32,21 +24,62 @@ const navItems = [
 
 function AdminLayout() {
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const { user, isAdmin, loading, signOut } = useAuth();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!loading && !user) navigate({ to: "/login" });
+  }, [loading, user, navigate]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-muted-foreground text-sm">
+        Verificando acesso…
+      </div>
+    );
+  }
+
+  if (!user) return null;
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-soft-gradient px-4">
+        <div className="max-w-md text-center rounded-3xl border border-border bg-card p-8 shadow-elegant">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+            <ShieldAlert className="h-7 w-7" />
+          </div>
+          <h1 className="mt-4 font-display text-2xl font-semibold">Acesso restrito</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Sua conta não tem permissão para acessar o painel administrativo.
+          </p>
+          <div className="mt-6 flex flex-col gap-2">
+            <Link to="/" className="rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
+              Ir para o site
+            </Link>
+            <button
+              onClick={() => signOut()}
+              className="rounded-full border border-border px-5 py-2.5 text-sm font-medium hover:bg-accent"
+            >
+              Sair
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex bg-muted/40">
-      {/* Sidebar desktop */}
       <aside className="hidden lg:flex w-64 shrink-0 flex-col border-r border-border bg-card">
-        <SidebarContent path={path} />
+        <SidebarContent path={path} onSignOut={signOut} email={user.email ?? ""} />
       </aside>
 
-      {/* Sidebar mobile (drawer) */}
       {open && (
         <div className="lg:hidden fixed inset-0 z-50 flex">
           <div className="absolute inset-0 bg-foreground/40" onClick={() => setOpen(false)} />
           <aside className="relative w-72 max-w-[85vw] bg-card border-r border-border flex flex-col animate-fade-up">
-            <SidebarContent path={path} onNavigate={() => setOpen(false)} />
+            <SidebarContent path={path} onNavigate={() => setOpen(false)} onSignOut={signOut} email={user.email ?? ""} />
           </aside>
         </div>
       )}
@@ -71,13 +104,15 @@ function AdminLayout() {
   );
 }
 
-function SidebarContent({ path, onNavigate }: { path: string; onNavigate?: () => void }) {
+function SidebarContent({
+  path, onNavigate, onSignOut, email,
+}: { path: string; onNavigate?: () => void; onSignOut: () => void; email: string }) {
   return (
     <>
       <div className="px-5 py-5 border-b border-border flex items-center justify-between">
-        <div>
+        <div className="min-w-0">
           <div className="font-display text-base font-semibold">Turistei Admin</div>
-          <div className="text-xs text-muted-foreground">Painel de controle</div>
+          <div className="text-xs text-muted-foreground truncate">{email}</div>
         </div>
         {onNavigate && (
           <button
@@ -107,8 +142,14 @@ function SidebarContent({ path, onNavigate }: { path: string; onNavigate?: () =>
           );
         })}
       </nav>
-      <div className="p-3 border-t border-border">
-        <Link to="/" onClick={onNavigate} className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-smooth">
+      <div className="p-3 border-t border-border space-y-2">
+        <button
+          onClick={onSignOut}
+          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-smooth"
+        >
+          <LogOut className="h-3.5 w-3.5" /> Sair da conta
+        </button>
+        <Link to="/" onClick={onNavigate} className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-smooth px-3 py-1">
           <ArrowLeft className="h-3.5 w-3.5" /> Voltar ao site
         </Link>
       </div>
