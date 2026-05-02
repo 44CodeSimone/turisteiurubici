@@ -250,13 +250,25 @@ export const SEED: DataState = {
   ],
   config: {
     nomePlataforma: "Turistei Urubici",
-    whatsapp: "5549999990000",
+    whatsapp: "5549999256721",
+    whatsappMensagem: "Olá! Vim pelo Turistei Urubici e gostaria de saber mais.",
     instagram: "@turisteiurubici",
     email: "contato@turisteiurubici.com.br",
+    heroTitulo: "Descubra Urubici em um só lugar",
+    heroSubtitulo:
+      "O guia digital da Serra Catarinense — pontos turísticos, hospedagens, gastronomia, eventos e experiências locais.",
+    heroImagem: "",
+    heroOverlayOpacity: 0.55,
     textoHome:
       "O Turistei Urubici reúne pontos turísticos, hospedagens, gastronomia, eventos e experiências locais — conectando turistas, moradores e negócios.",
     textoSobre:
       "O guia digital da Serra Catarinense. Conectamos turistas, moradores e negócios locais para que cada visita a Urubici seja inesquecível.",
+    footerTexto: "Guia digital da Serra Catarinense. Conectando turistas, moradores e negócios locais.",
+    seoTitle: "Turistei Urubici — Guia Digital da Serra Catarinense",
+    seoDescription:
+      "Guia digital de Urubici com pontos turísticos, hospedagens, gastronomia, eventos e experiências na Serra Catarinense.",
+    seoKeywords: "Urubici, Serra Catarinense, turismo em Urubici, pousadas Urubici, o que fazer em Urubici",
+    seoOgImage: "",
     faq: [
       { id: "f1", pergunta: "Qual é a melhor época para visitar Urubici?", resposta: "O inverno (junho a agosto) é o mais procurado pelo frio intenso e neve ocasional. Primavera e verão também são ótimos pelas cachoeiras cheias e lavandas em flor." },
       { id: "f2", pergunta: "Como me locomovo entre os pontos turísticos?", resposta: "A maioria dos atrativos exige carro próprio ou contratação de transfer/turismo receptivo. Algumas estradas são de chão." },

@@ -5,15 +5,10 @@ import { upsertLocal } from "@/data/repo";
 import { slugify } from "@/data/store";
 import { AdminModal } from "./AdminModal";
 import {
-  Field,
-  TextInput,
-  TextArea,
-  SelectInput,
-  Toggle,
-  ImageListInput,
-  PrimaryButton,
-  GhostButton,
+  Field, TextInput, TextArea, SelectInput, Toggle,
+  PrimaryButton, GhostButton,
 } from "./Field";
+import { ImageListInputV2 } from "./ImageInput";
 
 interface Props {
   open: boolean;
@@ -140,8 +135,8 @@ export function LocalForm({ open, onClose, initial, fixedCategoria, isEdit }: Pr
           </SelectInput>
         </Field>
 
-        <Field label="Imagens (URLs)" className="sm:col-span-2">
-          <ImageListInput value={l.imagens} onChange={(v) => set("imagens", v)} />
+        <Field label="Imagens (upload ou URL)" hint="Formato 4:3 fica melhor. Imagens são redimensionadas automaticamente." className="sm:col-span-2">
+          <ImageListInputV2 value={l.imagens} onChange={(v) => set("imagens", v)} />
         </Field>
 
         {isPonto && (

@@ -6,8 +6,7 @@ const links = [
   { to: "/", label: "Início" },
   { to: "/explorar", label: "Explorar" },
   { to: "/empresas", label: "Para empresas" },
-  { to: "/admin", label: "Admin" },
-];
+] as const;
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -29,6 +28,7 @@ export function Header() {
             <Link
               key={l.to}
               to={l.to}
+              search={l.to === "/explorar" ? { cat: undefined, q: undefined } as any : undefined as any}
               className="px-4 py-2 text-sm font-medium text-foreground/75 rounded-full transition-smooth hover:text-foreground hover:bg-accent"
               activeProps={{ className: "px-4 py-2 text-sm font-medium rounded-full bg-accent text-accent-foreground" }}
               activeOptions={{ exact: l.to === "/" }}
@@ -54,6 +54,7 @@ export function Header() {
               <Link
                 key={l.to}
                 to={l.to}
+                search={l.to === "/explorar" ? { cat: undefined, q: undefined } as any : undefined as any}
                 onClick={() => setOpen(false)}
                 className="px-4 py-3 text-sm font-medium rounded-lg hover:bg-accent transition-smooth"
                 activeProps={{ className: "px-4 py-3 text-sm font-medium rounded-lg bg-accent text-accent-foreground" }}
