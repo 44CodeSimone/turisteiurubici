@@ -1,18 +1,9 @@
 // Tipos de domínio do Turistei Urubici.
-// Estrutura preparada para futura migração para Supabase (mesmas chaves).
 
 export type Categoria =
-  | "hospedagem"
-  | "gastronomia"
-  | "cafes"
-  | "pontos-turisticos"
-  | "experiencias"
-  | "comercio"
-  | "servicos"
-  | "saude"
-  | "eventos"
-  | "transporte"
-  | "info";
+  | "hospedagem" | "gastronomia" | "cafes" | "pontos-turisticos"
+  | "experiencias" | "comercio" | "servicos" | "saude"
+  | "eventos" | "transporte" | "info";
 
 export type Plano = "presenca" | "destaque" | "premium";
 
@@ -47,7 +38,6 @@ export interface Local {
   ativo: boolean;
   plano: Plano;
   ordem: number;
-  // Pontos turísticos
   dificuldade?: "facil" | "moderada" | "dificil";
   valorEntrada?: string;
   melhorEpoca?: string;
@@ -59,7 +49,7 @@ export interface Evento {
   id: string;
   nome: string;
   descricao: string;
-  data: string; // ISO yyyy-mm-dd
+  data: string;
   horario?: string;
   local?: string;
   imagem?: string;
@@ -98,10 +88,29 @@ export interface FAQItem {
 export interface Config {
   nomePlataforma: string;
   whatsapp: string;
+  whatsappMensagem: string;
   instagram: string;
   email: string;
+
+  // Hero
+  heroTitulo: string;
+  heroSubtitulo: string;
+  heroImagem: string; // url ou data:base64
+  heroOverlayOpacity: number; // 0..1
+
+  // Textos
   textoHome: string;
   textoSobre: string;
+
+  // Footer
+  footerTexto: string;
+
+  // SEO
+  seoTitle: string;
+  seoDescription: string;
+  seoKeywords: string;
+  seoOgImage: string;
+
   faq: FAQItem[];
 }
 
