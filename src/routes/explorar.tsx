@@ -62,13 +62,13 @@ function Explorar() {
             />
           </div>
 
-          <div className="mt-5 flex flex-nowrap md:flex-wrap gap-2 overflow-x-auto -mx-4 px-4 pb-1 md:overflow-visible md:mx-0 md:px-0">
+          <div className="mt-6 flex flex-nowrap md:flex-wrap gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 pb-1 md:overflow-visible md:mx-0 md:px-0">
             <button
               onClick={() => navigate({ search: (s: any) => ({ ...s, cat: undefined }), replace: true })}
-              className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium border transition-smooth ${
+              className={`shrink-0 rounded-full px-4 py-2.5 text-sm font-semibold border transition-bounce hover:scale-[1.03] active:scale-95 ${
                 !cat
-                  ? "bg-primary text-primary-foreground border-primary shadow-soft"
-                  : "bg-card border-border hover:border-primary/40"
+                  ? "bg-primary-gradient text-primary-foreground border-transparent shadow-elegant"
+                  : "bg-card border-border hover:border-primary/60 hover:shadow-soft"
               }`}
             >
               Todos
@@ -77,10 +77,10 @@ function Explorar() {
               <button
                 key={c.slug}
                 onClick={() => navigate({ search: (s: any) => ({ ...s, cat: c.slug }), replace: true })}
-                className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium border transition-smooth ${
+                className={`shrink-0 rounded-full px-4 py-2.5 text-sm font-semibold border transition-bounce hover:scale-[1.03] active:scale-95 ${
                   cat === c.slug
-                    ? "bg-primary text-primary-foreground border-primary shadow-soft"
-                    : "bg-card border-border hover:border-primary/40"
+                    ? "bg-primary-gradient text-primary-foreground border-transparent shadow-elegant"
+                    : "bg-card border-border hover:border-primary/60 hover:shadow-soft"
                 }`}
               >
                 {c.nome}
