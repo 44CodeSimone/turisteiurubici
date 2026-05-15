@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { Mountain, Instagram, Mail } from "lucide-react";
+import { Instagram, Mail } from "lucide-react";
 import { useData } from "@/data/store";
+import logo from "@/assets/logo-turistei.png";
 
 export function Footer() {
   const { config } = useData();
@@ -8,10 +9,8 @@ export function Footer() {
     <footer className="mt-20 border-t border-border bg-soft-gradient">
       <div className="mx-auto max-w-7xl px-4 md:px-6 py-14 grid gap-10 md:grid-cols-4">
         <div className="md:col-span-2">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-gradient">
-              <Mountain className="h-5 w-5 text-primary-foreground" />
-            </div>
+          <div className="flex items-center gap-3">
+            <img src={logo} alt={config.nomePlataforma} className="h-11 w-11 rounded-full object-cover shadow-soft" />
             <div className="font-display text-lg font-semibold">{config.nomePlataforma}</div>
           </div>
           <p className="mt-4 max-w-md text-sm text-muted-foreground leading-relaxed">{config.footerTexto || config.textoSobre}</p>
