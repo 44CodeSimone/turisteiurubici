@@ -35,7 +35,7 @@ function Index() {
           alt="Vista da Serra Catarinense em Urubici ao amanhecer"
           width={1920}
           height={1024}
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover scale-105 animate-fade-in"
         />
         <div
           className="absolute inset-0"
@@ -43,32 +43,39 @@ function Index() {
             background: `linear-gradient(135deg, color-mix(in oklab, var(--primary) ${Math.round((data.config.heroOverlayOpacity ?? 0.55) * 100)}%, transparent), color-mix(in oklab, var(--secondary) ${Math.round((data.config.heroOverlayOpacity ?? 0.55) * 70)}%, transparent))`,
           }}
         />
-        <div className="relative mx-auto max-w-7xl px-4 md:px-6 py-20 md:py-36 text-primary-foreground">
+        {/* Scrim para profundidade na parte inferior */}
+        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/45 via-black/15 to-transparent" />
+        {/* Vinheta sutil */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(0,0,0,0.35)_100%)]" />
+
+        <div className="relative mx-auto max-w-7xl px-4 md:px-6 py-24 md:py-40 lg:py-44 text-primary-foreground">
           <div className="max-w-3xl animate-fade-up">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur px-3.5 py-1.5 text-xs font-medium border border-white/20">
-              <Sparkles className="h-3.5 w-3.5 text-gold" />
+            <span className="inline-flex items-center gap-2 rounded-full glass-dark px-4 py-1.5 text-xs font-medium tracking-wide">
+              <Sparkles className="h-3.5 w-3.5 text-gold animate-pulse" />
               Serra Catarinense • Brasil
             </span>
-            <h1 className="mt-5 font-display text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05]">
+            <h1 className="mt-6 font-display text-5xl md:text-7xl lg:text-[5.5rem] font-semibold leading-[1.02] tracking-tight drop-shadow-md">
               {data.config.heroTitulo || "Descubra Urubici em um só lugar"}
             </h1>
-            <p className="mt-5 text-base md:text-lg max-w-xl opacity-95 leading-relaxed">{data.config.heroSubtitulo || data.config.textoHome}</p>
-            <div className="mt-7 flex flex-wrap gap-3">
+            <p className="mt-6 text-base md:text-xl max-w-2xl opacity-95 leading-relaxed font-light">
+              {data.config.heroSubtitulo || data.config.textoHome}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 to="/explorar"
                 search={{ cat: undefined, q: undefined } as any}
-                className="inline-flex items-center gap-2 rounded-full bg-gold-gradient px-6 py-3.5 text-sm font-semibold text-gold-foreground shadow-elegant transition-bounce hover:scale-105 active:scale-95"
+                className="inline-flex items-center gap-2 rounded-full bg-gold-gradient px-7 py-4 text-sm font-semibold text-gold-foreground shadow-elegant transition-bounce hover:scale-105 hover:shadow-glow active:scale-95"
               >
                 Explorar a cidade <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 to="/empresas"
-                className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur border border-white/30 px-6 py-3.5 text-sm font-semibold text-primary-foreground transition-smooth hover:bg-white/20"
+                className="inline-flex items-center gap-2 rounded-full glass-dark px-7 py-4 text-sm font-semibold text-primary-foreground transition-smooth hover:bg-white/20"
               >
                 Divulgar meu negócio
               </Link>
             </div>
-            <div className="mt-8">
+            <div className="mt-10">
               <ClimaWidget variant="hero" />
             </div>
           </div>
