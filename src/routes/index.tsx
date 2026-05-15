@@ -89,19 +89,21 @@ function Index() {
           <p className="mt-2 text-muted-foreground">Tudo o que Urubici tem a oferecer, organizado para você.</p>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
-          {categoriasAtivas.map((c) => {
+          {categoriasAtivas.map((c, i) => {
             const Icon = (Icons as any)[c.icon] ?? Icons.MapPin;
             return (
               <Link
                 key={c.slug}
                 to="/explorar"
                 search={{ cat: c.slug } as any}
-                className="group flex flex-col items-center gap-2.5 rounded-2xl border border-border bg-card p-4 md:p-5 text-center card-hover active:scale-[0.98]"
+                style={{ animationDelay: `${i * 40}ms` }}
+                className="group relative flex flex-col items-center gap-3 rounded-2xl border border-border/70 bg-card p-5 md:p-6 text-center hover-lift active:scale-[0.98] animate-scale-in overflow-hidden"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent text-primary transition-bounce group-hover:bg-primary group-hover:text-primary-foreground">
-                  <Icon className="h-5 w-5" />
+                <div className="absolute inset-0 bg-primary-gradient opacity-0 transition-opacity duration-500 group-hover:opacity-[0.04]" />
+                <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-accent text-primary transition-bounce group-hover:bg-primary-gradient group-hover:text-primary-foreground group-hover:scale-110 group-hover:rotate-3 shadow-sm">
+                  <Icon className="h-6 w-6" />
                 </div>
-                <div className="text-sm font-medium leading-tight">{c.nome}</div>
+                <div className="relative text-sm font-semibold leading-tight">{c.nome}</div>
               </Link>
             );
           })}
