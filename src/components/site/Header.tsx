@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { Mountain, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import logo from "@/assets/logo-turistei.png";
 
 const links = [
   { to: "/", label: "Início" },
@@ -13,10 +14,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
-        <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-gradient shadow-soft transition-bounce group-hover:scale-105">
-            <Mountain className="h-5 w-5 text-primary-foreground" />
-          </div>
+        <Link to="/" className="flex items-center gap-3 group">
+          <img
+            src={logo}
+            alt="Turistei Urubici - Serra Catarinense"
+            className="h-11 w-11 rounded-full object-cover shadow-soft transition-bounce group-hover:scale-105"
+          />
           <div className="leading-tight">
             <div className="font-display text-lg font-semibold text-foreground">Turistei Urubici</div>
             <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Serra Catarinense</div>
