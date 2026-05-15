@@ -66,46 +66,74 @@ function Empresas() {
         <h2 className="font-display text-3xl md:text-4xl font-semibold text-center">Planos comerciais</h2>
         <p className="mt-2 text-center text-muted-foreground">Escolha o plano que melhor se adapta ao seu momento.</p>
 
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-5">
-          {planos.map((p) => (
-            <div
-              key={p.id}
-              className={`relative flex flex-col rounded-3xl border p-6 md:p-7 card-hover ${
-                p.destaque ? "border-primary bg-primary-gradient text-primary-foreground shadow-elegant" : "border-border bg-card"
-              }`}
-            >
-              {p.destaque && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gold-gradient px-3 py-1 text-[11px] font-semibold text-gold-foreground shadow-soft">
-                  Mais escolhido
-                </span>
-              )}
-              <h3 className={`font-display text-2xl font-semibold ${p.destaque ? "" : "text-foreground"}`}>{p.nome}</h3>
-              <p className={`mt-1.5 text-sm ${p.destaque ? "opacity-90" : "text-muted-foreground"}`}>{p.descricao}</p>
-
-              <div className={`mt-5 text-3xl font-display font-semibold ${p.destaque ? "" : "text-foreground"}`}>{p.valor}</div>
-              <div className={`text-xs ${p.destaque ? "opacity-80" : "text-muted-foreground"}`}>Personalizável</div>
-
-              <ul className="mt-6 space-y-2.5 text-sm flex-1">
-                {p.beneficios.map((i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <Check className={`h-4 w-4 mt-0.5 shrink-0 ${p.destaque ? "text-gold" : "text-primary"}`} />
-                    <span className={p.destaque ? "" : "text-foreground/85"}>{i}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <a
-                href={whatsappUrl(data.config.whatsapp, `Quero conhecer o plano ${p.nome} do Turistei Urubici`)}
-                target="_blank"
-                rel="noreferrer"
-                className={`mt-7 inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition-bounce hover:scale-[1.02] active:scale-[0.98] ${
-                  p.destaque ? "bg-gold-gradient text-gold-foreground shadow-soft" : "bg-primary text-primary-foreground"
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-5 lg:gap-6 items-stretch">
+          {planos.map((p, idx) => {
+            const isPremium = p.destaque || /premium/i.test(p.nome);
+            return (
+              <div
+                key={p.id}
+                style={{ animationDelay: `${idx * 80}ms` }}
+                className={`group relative flex flex-col rounded-3xl p-7 md:p-8 transition-all duration-500 animate-scale-in ${
+                  p.destaque
+                    ? "bg-primary-gradient text-primary-foreground shadow-elegant md:scale-[1.04] md:-my-2 ring-1 ring-gold/40 hover:shadow-glow"
+                    : "border border-border/80 bg-card hover-lift"
                 }`}
               >
-                Quero esse plano
-              </a>
-            </div>
-          ))}
+                {p.destaque && (
+                  <>
+                    <div className="absolute -inset-px rounded-3xl bg-gold/20 blur-2xl opacity-30 -z-10" />
+                    <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gold-gradient px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider text-gold-foreground shadow-elegant">
+                      ★ Mais escolhido
+                    </span>
+                  </>
+                )}
+
+                <h3 className={`font-display text-2xl font-semibold ${p.destaque ? "" : "text-foreground"}`}>{p.nome}</h3>
+                <p className={`mt-2 text-sm leading-relaxed ${p.destaque ? "opacity-90" : "text-muted-foreground"}`}>{p.descricao}</p>
+
+                <div className={`mt-6 flex items-baseline gap-1.5 ${p.destaque ? "" : "text-foreground"}`}>
+                  <span className="text-4xl font-display font-bold tracking-tight">{p.valor}</span>
+                </div>
+                <div className={`text-xs ${p.destaque ? "opacity-80" : "text-muted-foreground"}`}>Personalizável</div>
+
+                <div className={`my-6 h-px ${p.destaque ? "bg-white/20" : "bg-border"}`} />
+
+                <ul className="space-y-3 text-sm flex-1">
+                  {p.beneficios.map((i) => (
+                    <li key={i} className="flex items-start gap-2.5">
+                      <span className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${p.destaque ? "bg-gold/30 text-gold" : "bg-primary/10 text-primary"}`}>
+                        <Check className="h-3 w-3" strokeWidth={3} />
+                      </span>
+                      <span className={p.destaque ? "" : "text-foreground/85"}>{i}</span>
+                    </li>
+                  ))}
+                  {isPremium && (
+                    <li className="flex items-start gap-2.5">
+                      <span className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${p.destaque ? "bg-gold/30 text-gold" : "bg-primary/10 text-primary"}`}>
+                        <Check className="h-3 w-3" strokeWidth={3} />
+                      </span>
+                      <span className={p.destaque ? "" : "text-foreground/85"}>
+                        <strong>Vídeo curto</strong> (até 45s) no perfil
+                      </span>
+                    </li>
+                  )}
+                </ul>
+
+                <a
+                  href={whatsappUrl(data.config.whatsapp, `Quero conhecer o plano ${p.nome} do Turistei Urubici`)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={`mt-8 inline-flex items-center justify-center rounded-full px-5 py-3.5 text-sm font-semibold transition-bounce hover:scale-[1.03] active:scale-[0.97] ${
+                    p.destaque
+                      ? "bg-gold-gradient text-gold-foreground shadow-elegant"
+                      : "bg-foreground text-background hover:bg-primary"
+                  }`}
+                >
+                  Quero esse plano
+                </a>
+              </div>
+            );
+          })}
         </div>
       </section>
 
