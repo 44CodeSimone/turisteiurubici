@@ -25,6 +25,7 @@ import { Route as AdminEmpresasRouteImport } from './routes/admin.empresas'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminCategoriasRouteImport } from './routes/admin.categorias'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
+import { Route as ApiPublicClimaRouteImport } from './routes/api/public/clima'
 
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
@@ -106,6 +107,11 @@ const AdminBannersRoute = AdminBannersRouteImport.update({
   path: '/banners',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiPublicClimaRoute = ApiPublicClimaRouteImport.update({
+  id: '/api/public/clima',
+  path: '/api/public/clima',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -124,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/admin/pontos': typeof AdminPontosRoute
   '/local/$slug': typeof LocalSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/api/public/clima': typeof ApiPublicClimaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/admin/pontos': typeof AdminPontosRoute
   '/local/$slug': typeof LocalSlugRoute
   '/admin': typeof AdminIndexRoute
+  '/api/public/clima': typeof ApiPublicClimaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -160,6 +168,7 @@ export interface FileRoutesById {
   '/admin/pontos': typeof AdminPontosRoute
   '/local/$slug': typeof LocalSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/api/public/clima': typeof ApiPublicClimaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -180,6 +189,7 @@ export interface FileRouteTypes {
     | '/admin/pontos'
     | '/local/$slug'
     | '/admin/'
+    | '/api/public/clima'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -197,6 +207,7 @@ export interface FileRouteTypes {
     | '/admin/pontos'
     | '/local/$slug'
     | '/admin'
+    | '/api/public/clima'
   id:
     | '__root__'
     | '/'
@@ -215,6 +226,7 @@ export interface FileRouteTypes {
     | '/admin/pontos'
     | '/local/$slug'
     | '/admin/'
+    | '/api/public/clima'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -226,6 +238,7 @@ export interface RootRouteChildren {
   PrivacidadeRoute: typeof PrivacidadeRoute
   TermosRoute: typeof TermosRoute
   LocalSlugRoute: typeof LocalSlugRoute
+  ApiPublicClimaRoute: typeof ApiPublicClimaRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -342,6 +355,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBannersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/api/public/clima': {
+      id: '/api/public/clima'
+      path: '/api/public/clima'
+      fullPath: '/api/public/clima'
+      preLoaderRoute: typeof ApiPublicClimaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -378,16 +398,8 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacidadeRoute: PrivacidadeRoute,
   TermosRoute: TermosRoute,
   LocalSlugRoute: LocalSlugRoute,
+  ApiPublicClimaRoute: ApiPublicClimaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
