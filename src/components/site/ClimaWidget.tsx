@@ -16,8 +16,15 @@ const FALLBACK: ClimaInfo = {
 };
 
 async function fetchClima(): Promise<ClimaInfo | null> {
-  // TODO: integrar com OpenWeather via /api/public/clima
-  return null;
+  try {
+    const r = await fetch("/api/public/clima");
+    if (!r.ok) return null;
+    const j = await r.json();
+    if (j?.error) return null;
+    return { temperatura: j.temperatura, condicao: j.condicao, cidade: j.cidade };
+  } catch {
+    return null;
+  }
 }
 
 function iconePara(c: string) {
