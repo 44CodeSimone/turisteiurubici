@@ -57,6 +57,15 @@ export interface Local {
   melhorEpoca?: string;
   cuidados?: string;
   estrutura?: string;
+
+  // Contato rápido / CTA configurável
+  ctaTipo?: CtaTipo;
+  ctaTexto?: string;
+  ctaMensagem?: string;
+
+  // Status comercial / contrato
+  statusContrato?: StatusContrato;
+  validadeContrato?: string; // ISO yyyy-mm-dd
 }
 
 export interface Evento {
