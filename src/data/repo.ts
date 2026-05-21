@@ -74,7 +74,26 @@ export function newEmptyLocal(): Local {
     ativo: true,
     plano: "presenca",
     ordem: getState().locais.length + 1,
+    ctaTipo: "whatsapp",
+    ctaTexto: "",
+    ctaMensagem: "",
+    statusContrato: "ativo",
+    validadeContrato: "",
   };
+}
+
+export function setLocalStatusContrato(id: string, status: import("./types").StatusContrato) {
+  setState((s) => ({
+    ...s,
+    locais: s.locais.map((l) => (l.id === id ? { ...l, statusContrato: status } : l)),
+  }));
+}
+
+export function setLocalValidade(id: string, validade: string) {
+  setState((s) => ({
+    ...s,
+    locais: s.locais.map((l) => (l.id === id ? { ...l, validadeContrato: validade } : l)),
+  }));
 }
 
 export function upsertLocal(l: Local) {
