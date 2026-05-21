@@ -9,6 +9,7 @@ import {
   PrimaryButton, GhostButton,
 } from "./Field";
 import { ImageListInputV2 } from "./ImageInput";
+import { CTA_OPTIONS } from "@/lib/cta";
 
 interface Props {
   open: boolean;
