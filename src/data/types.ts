@@ -7,6 +7,20 @@ export type Categoria =
 
 export type Plano = "presenca" | "destaque" | "premium";
 
+export type CtaTipo =
+  | "whatsapp"
+  | "reserva"
+  | "orcamento"
+  | "disponibilidade"
+  | "agendamento";
+
+export type StatusContrato =
+  | "ativo"
+  | "pendente"
+  | "vencido"
+  | "suspenso"
+  | "cancelado";
+
 export interface CategoriaItem {
   slug: Categoria | string;
   nome: string;
