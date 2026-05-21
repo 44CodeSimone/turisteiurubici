@@ -6,6 +6,7 @@ import { ElzaWidget } from "@/components/site/ElzaWidget";
 import { useData } from "@/data/store";
 import { getLocalPorSlug, getCategoria } from "@/data/repo";
 import { googleMapsUrl, wazeUrl, whatsappUrl } from "@/lib/maps";
+import { ctaWhatsappUrl, getCtaConfig, isLocalPublico } from "@/lib/cta";
 
 export const Route = createFileRoute("/local/$slug")({
   component: Detalhes,
@@ -52,9 +53,26 @@ export const Route = createFileRoute("/local/$slug")({
 
 function Detalhes() {
   const { slug } = Route.useParams();
-  // Reativo: re-renderiza quando o admin altera o item.
   const data = useData();
   const local = data.locais.find((l) => l.slug === slug) ?? Route.useLoaderData().local;
+
+  if (!isLocalPublico(local)) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <div className="flex-1 flex items-center justify-center px-4">
+          <div className="text-center max-w-md">
+            <h1 className="font-display text-3xl font-semibold">Esta página está temporariamente indisponível</h1>
+            <p className="mt-2 text-muted-foreground">O anúncio está fora do ar no momento. Volte em breve.</p>
+            <Link to="/explorar" search={{ cat: undefined, q: undefined } as any} className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
+              Voltar para Explorar
+            </Link>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   const cat = getCategoria(local.categoria);
   const isPonto = local.categoria === "pontos-turisticos";
@@ -149,16 +167,21 @@ function Detalhes() {
               >
                 Abrir no Waze
               </a>
-              {(local.whatsapp || data.config.whatsapp) && (
-                <a
-                  href={whatsappUrl(local.whatsapp || data.config.whatsapp, data.config.whatsappMensagem || `Olá! Vi ${local.nome} no Turistei Urubici.`)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-secondary px-4 py-3 text-sm font-semibold text-secondary-foreground shadow-soft transition-bounce hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  <MessageCircle className="h-4 w-4" /> WhatsApp
-                </a>
-              )}
+              {(() => {
+                const ctaUrl = ctaWhatsappUrl(local, data.config.whatsapp);
+                if (!ctaUrl) return null;
+                const { texto } = getCtaConfig(local);
+                return (
+                  <a
+                    href={ctaUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-secondary px-4 py-3 text-sm font-semibold text-secondary-foreground shadow-soft transition-bounce hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <MessageCircle className="h-4 w-4" /> {texto}
+                  </a>
+                );
+              })()}
             </div>
           </div>
 

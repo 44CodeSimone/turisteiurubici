@@ -9,6 +9,7 @@ import {
   PrimaryButton, GhostButton,
 } from "./Field";
 import { ImageListInputV2 } from "./ImageInput";
+import { CTA_OPTIONS } from "@/lib/cta";
 
 interface Props {
   open: boolean;
@@ -138,6 +139,63 @@ export function LocalForm({ open, onClose, initial, fixedCategoria, isEdit }: Pr
         <Field label="Imagens (upload ou URL)" hint="Formato 4:3 fica melhor. Imagens são redimensionadas automaticamente." className="sm:col-span-2">
           <ImageListInputV2 value={l.imagens} onChange={(v) => set("imagens", v)} />
         </Field>
+
+        {/* Contato rápido / CTA */}
+        <div className="sm:col-span-2 mt-2 rounded-2xl border border-border bg-muted/30 p-4 space-y-3">
+          <div className="font-display text-sm font-semibold">Contato rápido (botão do anunciante)</div>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <Field label="Tipo de botão">
+              <SelectInput
+                value={l.ctaTipo ?? "whatsapp"}
+                onChange={(e) => set("ctaTipo", e.target.value as Local["ctaTipo"])}
+              >
+                {CTA_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </SelectInput>
+            </Field>
+            <Field label="Texto do botão" hint="Deixe vazio para usar o padrão do tipo.">
+              <TextInput value={l.ctaTexto ?? ""} onChange={(e) => set("ctaTexto", e.target.value)} placeholder="Ex.: Reservar agora" />
+            </Field>
+            <Field label="Mensagem automática do WhatsApp" className="sm:col-span-2" hint="Será pré-preenchida quando o cliente clicar.">
+              <TextArea
+                rows={2}
+                value={l.ctaMensagem ?? ""}
+                onChange={(e) => set("ctaMensagem", e.target.value)}
+                placeholder={`Olá! Quero reservar em ${l.nome || "seu estabelecimento"}.`}
+              />
+            </Field>
+          </div>
+        </div>
+
+        {/* Contrato / plano */}
+        <div className="sm:col-span-2 rounded-2xl border border-border bg-muted/30 p-4 space-y-3">
+          <div className="font-display text-sm font-semibold">Contrato / Plano</div>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <Field label="Status do contrato">
+              <SelectInput
+                value={l.statusContrato ?? "ativo"}
+                onChange={(e) => set("statusContrato", e.target.value as Local["statusContrato"])}
+              >
+                <option value="ativo">Ativo</option>
+                <option value="pendente">Pendente</option>
+                <option value="vencido">Vencido</option>
+                <option value="suspenso">Suspenso</option>
+                <option value="cancelado">Cancelado</option>
+              </SelectInput>
+            </Field>
+            <Field label="Validade do contrato" hint="Após esta data o anunciante fica offline automaticamente.">
+              <TextInput
+                type="date"
+                value={l.validadeContrato ?? ""}
+                onChange={(e) => set("validadeContrato", e.target.value)}
+              />
+            </Field>
+          </div>
+          <p className="text-[11px] text-muted-foreground">
+            Quando o status fica fora do ar (vencido, suspenso ou cancelado) o conteúdo é preservado — basta reativar para voltar ao ar.
+          </p>
+        </div>
 
         {isPonto && (
           <>

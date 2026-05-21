@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
-import { Plus, Search, Pencil, Star, Power, Trash2, MapPin } from "lucide-react";
+import { Plus, Search, Pencil, Star, Power, Trash2, MapPin, PlayCircle, PauseCircle, XCircle } from "lucide-react";
 import { useData } from "@/data/store";
-import { newEmptyLocal, removeLocal, toggleLocalAtivo, toggleLocalDestaque, getCategoria } from "@/data/repo";
+import { newEmptyLocal, removeLocal, toggleLocalAtivo, toggleLocalDestaque, getCategoria, setLocalStatusContrato } from "@/data/repo";
 import type { Local } from "@/data/types";
+import { effectiveStatus, STATUS_LABEL, STATUS_TONE } from "@/lib/cta";
 import { LocalForm } from "./LocalForm";
 import { PrimaryButton } from "./Field";
 
@@ -75,9 +76,14 @@ export function LocaisManager({ titulo, subtitulo, fixedCategoria }: Props) {
               </div>
             </div>
             <div className="mt-3 flex items-center justify-between gap-2">
-              <span className={`text-[11px] rounded-full px-2 py-0.5 ${l.ativo ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
-                {l.ativo ? "Ativo" : "Inativo"}
-              </span>
+              {(() => {
+                const st = effectiveStatus(l);
+                return (
+                  <span className={`text-[11px] rounded-full px-2 py-0.5 ${STATUS_TONE[st]}`}>
+                    {STATUS_LABEL[st]}{!l.ativo && " · oculto"}
+                  </span>
+                );
+              })()}
               <div className="flex items-center gap-1">
                 <ActionBtn title="Destacar" onClick={() => toggleLocalDestaque(l.id)} active={l.destaque}>
                   <Star className="h-4 w-4" />
@@ -132,9 +138,17 @@ export function LocaisManager({ titulo, subtitulo, fixedCategoria }: Props) {
                   <span className="rounded-full bg-accent px-2 py-0.5 text-xs font-medium capitalize">{l.plano}</span>
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${l.ativo ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
-                    {l.ativo ? "Ativo" : "Inativo"}
-                  </span>
+                  {(() => {
+                    const st = effectiveStatus(l);
+                    return (
+                      <div className="flex flex-col gap-1">
+                        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_TONE[st]}`}>
+                          {STATUS_LABEL[st]}
+                        </span>
+                        {!l.ativo && <span className="text-[10px] text-muted-foreground">Oculto no site</span>}
+                      </div>
+                    );
+                  })()}
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="inline-flex items-center gap-1">
@@ -143,6 +157,15 @@ export function LocaisManager({ titulo, subtitulo, fixedCategoria }: Props) {
                     </ActionBtn>
                     <ActionBtn title="Ativar/Inativar" onClick={() => toggleLocalAtivo(l.id)}>
                       <Power className="h-4 w-4" />
+                    </ActionBtn>
+                    <ActionBtn title="Reativar contrato" onClick={() => setLocalStatusContrato(l.id, "ativo")}>
+                      <PlayCircle className="h-4 w-4" />
+                    </ActionBtn>
+                    <ActionBtn title="Suspender" onClick={() => setLocalStatusContrato(l.id, "suspenso")}>
+                      <PauseCircle className="h-4 w-4" />
+                    </ActionBtn>
+                    <ActionBtn title="Cancelar contrato" onClick={() => confirm(`Cancelar contrato de "${l.nome}"? O conteúdo é preservado.`) && setLocalStatusContrato(l.id, "cancelado")} danger>
+                      <XCircle className="h-4 w-4" />
                     </ActionBtn>
                     <ActionBtn title="Editar" onClick={() => setEditing(l)}>
                       <Pencil className="h-4 w-4" />

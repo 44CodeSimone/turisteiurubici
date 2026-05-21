@@ -8,6 +8,7 @@ import { ClimaWidget } from "@/components/site/ClimaWidget";
 import { ElzaWidget } from "@/components/site/ElzaWidget";
 import { LocalCard } from "@/components/site/LocalCard";
 import { useData } from "@/data/store";
+import { isLocalPublico } from "@/lib/cta";
 import heroImg from "@/assets/hero-urubici.jpg";
 
 export const Route = createFileRoute("/")({
@@ -16,7 +17,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const data = useData();
-  const ativos = data.locais.filter((l) => l.ativo).sort((a, b) => a.ordem - b.ordem);
+  const ativos = data.locais.filter(isLocalPublico).sort((a, b) => a.ordem - b.ordem);
   const destaques = ativos.filter((l) => l.destaque).slice(0, 6);
   const gastronomia = ativos.filter((l) => l.categoria === "gastronomia").slice(0, 3);
   const hospedagem = ativos.filter((l) => l.categoria === "hospedagem").slice(0, 3);
