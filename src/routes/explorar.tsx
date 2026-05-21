@@ -31,7 +31,7 @@ function Explorar() {
 
   const filtrados = useMemo(() => {
     return data.locais
-      .filter((l) => l.ativo)
+      .filter(isLocalPublico)
       .filter((l) => (cat ? l.categoria === cat : true))
       .filter((l) =>
         q ? `${l.nome} ${l.descricaoCurta}`.toLowerCase().includes(q.toLowerCase()) : true,
