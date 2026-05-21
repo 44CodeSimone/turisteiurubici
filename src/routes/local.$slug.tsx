@@ -150,16 +150,21 @@ function Detalhes() {
               >
                 Abrir no Waze
               </a>
-              {(local.whatsapp || data.config.whatsapp) && (
-                <a
-                  href={whatsappUrl(local.whatsapp || data.config.whatsapp, data.config.whatsappMensagem || `Olá! Vi ${local.nome} no Turistei Urubici.`)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-secondary px-4 py-3 text-sm font-semibold text-secondary-foreground shadow-soft transition-bounce hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  <MessageCircle className="h-4 w-4" /> WhatsApp
-                </a>
-              )}
+              {(() => {
+                const ctaUrl = ctaWhatsappUrl(local, data.config.whatsapp);
+                if (!ctaUrl) return null;
+                const { texto } = getCtaConfig(local);
+                return (
+                  <a
+                    href={ctaUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-secondary px-4 py-3 text-sm font-semibold text-secondary-foreground shadow-soft transition-bounce hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <MessageCircle className="h-4 w-4" /> {texto}
+                  </a>
+                );
+              })()}
             </div>
           </div>
 
