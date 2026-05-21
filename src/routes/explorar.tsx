@@ -6,6 +6,7 @@ import { Footer } from "@/components/site/Footer";
 import { ElzaWidget } from "@/components/site/ElzaWidget";
 import { LocalCard } from "@/components/site/LocalCard";
 import { useData } from "@/data/store";
+import { isLocalPublico } from "@/lib/cta";
 
 export const Route = createFileRoute("/explorar")({
   validateSearch: (s: Record<string, unknown>) => ({
