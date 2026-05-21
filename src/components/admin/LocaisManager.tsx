@@ -76,9 +76,14 @@ export function LocaisManager({ titulo, subtitulo, fixedCategoria }: Props) {
               </div>
             </div>
             <div className="mt-3 flex items-center justify-between gap-2">
-              <span className={`text-[11px] rounded-full px-2 py-0.5 ${l.ativo ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
-                {l.ativo ? "Ativo" : "Inativo"}
-              </span>
+              {(() => {
+                const st = effectiveStatus(l);
+                return (
+                  <span className={`text-[11px] rounded-full px-2 py-0.5 ${STATUS_TONE[st]}`}>
+                    {STATUS_LABEL[st]}{!l.ativo && " · oculto"}
+                  </span>
+                );
+              })()}
               <div className="flex items-center gap-1">
                 <ActionBtn title="Destacar" onClick={() => toggleLocalDestaque(l.id)} active={l.destaque}>
                   <Star className="h-4 w-4" />
