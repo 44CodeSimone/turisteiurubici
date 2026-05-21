@@ -59,8 +59,26 @@ export function LocalCard({ local }: { local: Local }) {
         <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
           {local.descricaoCurta}
         </p>
-        <div className="mt-3 inline-flex items-center text-xs font-semibold text-primary opacity-0 -translate-x-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
-          Ver detalhes →
+        <div className="mt-3 flex items-center justify-between gap-2">
+          <span className="inline-flex items-center text-xs font-semibold text-primary opacity-0 -translate-x-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
+            Ver detalhes →
+          </span>
+          {(() => {
+            const url = ctaWhatsappUrl(local);
+            if (!url) return null;
+            const { texto } = getCtaConfig(local);
+            return (
+              <a
+                href={url}
+                target="_blank"
+                rel="noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary px-3 py-1.5 text-[11px] font-semibold hover:bg-primary hover:text-primary-foreground transition-smooth"
+              >
+                <MessageCircle className="h-3 w-3" /> {texto}
+              </a>
+            );
+          })()}
         </div>
       </div>
     </Link>
