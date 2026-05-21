@@ -53,9 +53,26 @@ export const Route = createFileRoute("/local/$slug")({
 
 function Detalhes() {
   const { slug } = Route.useParams();
-  // Reativo: re-renderiza quando o admin altera o item.
   const data = useData();
   const local = data.locais.find((l) => l.slug === slug) ?? Route.useLoaderData().local;
+
+  if (!isLocalPublico(local)) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <div className="flex-1 flex items-center justify-center px-4">
+          <div className="text-center max-w-md">
+            <h1 className="font-display text-3xl font-semibold">Esta página está temporariamente indisponível</h1>
+            <p className="mt-2 text-muted-foreground">O anúncio está fora do ar no momento. Volte em breve.</p>
+            <Link to="/explorar" search={{ cat: undefined, q: undefined } as any} className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
+              Voltar para Explorar
+            </Link>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   const cat = getCategoria(local.categoria);
   const isPonto = local.categoria === "pontos-turisticos";
