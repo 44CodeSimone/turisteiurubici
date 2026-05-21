@@ -8,6 +8,7 @@ import { ClimaWidget } from "@/components/site/ClimaWidget";
 import { ElzaWidget } from "@/components/site/ElzaWidget";
 import { LocalCard } from "@/components/site/LocalCard";
 import { useData } from "@/data/store";
+import { isLocalPublico } from "@/lib/cta";
 import heroImg from "@/assets/hero-urubici.jpg";
 
 export const Route = createFileRoute("/")({
