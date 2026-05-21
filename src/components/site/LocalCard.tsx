@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { MapPin, Star, Crown } from "lucide-react";
-import type { Local } from "@/data/mock";
-import { getCategoria } from "@/data/mock";
+import { MapPin, Star, Crown, MessageCircle } from "lucide-react";
+import type { Local } from "@/data/types";
+import { getCategoria } from "@/data/repo";
+import { ctaWhatsappUrl, getCtaConfig } from "@/lib/cta";
 
 export function LocalCard({ local }: { local: Local }) {
   const cat = getCategoria(local.categoria);
