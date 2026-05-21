@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
-import { Plus, Search, Pencil, Star, Power, Trash2, MapPin } from "lucide-react";
+import { Plus, Search, Pencil, Star, Power, Trash2, MapPin, PlayCircle, PauseCircle, XCircle } from "lucide-react";
 import { useData } from "@/data/store";
-import { newEmptyLocal, removeLocal, toggleLocalAtivo, toggleLocalDestaque, getCategoria } from "@/data/repo";
+import { newEmptyLocal, removeLocal, toggleLocalAtivo, toggleLocalDestaque, getCategoria, setLocalStatusContrato } from "@/data/repo";
 import type { Local } from "@/data/types";
+import { effectiveStatus, STATUS_LABEL, STATUS_TONE } from "@/lib/cta";
 import { LocalForm } from "./LocalForm";
 import { PrimaryButton } from "./Field";
 
