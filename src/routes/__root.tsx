@@ -47,6 +47,7 @@ export const Route = createRootRoute({
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "canonical", href: "https://turisteiurubici.lovable.app/" },
+      { rel: "google-site-verification", content: "pRf45feXBAGkh4uAdlXK2cJzpqP9dd2iBJ5kqgryXyM" },
     ],
   }),
   shellComponent: RootShell,
