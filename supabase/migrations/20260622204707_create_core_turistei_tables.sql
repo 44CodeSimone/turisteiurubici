@@ -1,6 +1,6 @@
 ﻿-- Core Turistei data tables: categorias, locais, eventos
 
-CREATE TABLE public.categorias (
+CREATE TABLE IF NOT EXISTS public.categorias (
   slug TEXT PRIMARY KEY,
   nome TEXT NOT NULL,
   icon TEXT NOT NULL DEFAULT 'MapPin',
@@ -11,7 +11,7 @@ CREATE TABLE public.categorias (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE TABLE public.locais (
+CREATE TABLE IF NOT EXISTS public.locais (
   id TEXT PRIMARY KEY,
   slug TEXT NOT NULL UNIQUE,
   nome TEXT NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE public.locais (
     CHECK (status_contrato IS NULL OR status_contrato IN ('ativo', 'pendente', 'vencido', 'suspenso', 'cancelado'))
 );
 
-CREATE TABLE public.eventos (
+CREATE TABLE IF NOT EXISTS public.eventos (
   id TEXT PRIMARY KEY,
   nome TEXT NOT NULL,
   descricao TEXT NOT NULL DEFAULT '',
@@ -73,11 +73,11 @@ CREATE TABLE public.eventos (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_categorias_ativo_ordem ON public.categorias (ativo, ordem);
-CREATE INDEX idx_locais_ativo_ordem ON public.locais (ativo, ordem);
-CREATE INDEX idx_locais_categoria_ativo ON public.locais (categoria, ativo);
-CREATE INDEX idx_locais_destaque_ativo ON public.locais (destaque, ativo);
-CREATE INDEX idx_eventos_ativo_data ON public.eventos (ativo, data);
+CREATE INDEX IF NOT EXISTS idx_categorias_ativo_ordem ON public.categorias (ativo, ordem);
+CREATE INDEX IF NOT EXISTS idx_locais_ativo_ordem ON public.locais (ativo, ordem);
+CREATE INDEX IF NOT EXISTS idx_locais_categoria_ativo ON public.locais (categoria, ativo);
+CREATE INDEX IF NOT EXISTS idx_locais_destaque_ativo ON public.locais (destaque, ativo);
+CREATE INDEX IF NOT EXISTS idx_eventos_ativo_data ON public.eventos (ativo, data);
 
 CREATE TRIGGER update_categorias_updated_at
 BEFORE UPDATE ON public.categorias
