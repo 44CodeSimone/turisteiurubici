@@ -9,6 +9,7 @@ import { Field, TextInput, SelectInput, Toggle, PrimaryButton, GhostButton } fro
 
 export const Route = createFileRoute("/admin/banners")({
   component: AdminBanners,
+  head: () => ({ meta: [{ title: "Banners — Admin | Turistei Urubici" }, { name: "robots", content: "noindex, nofollow" }] }),
 });
 
 function AdminBanners() {

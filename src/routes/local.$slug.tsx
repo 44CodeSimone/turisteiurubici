@@ -5,7 +5,7 @@ import { Footer } from "@/components/site/Footer";
 import { ElzaWidget } from "@/components/site/ElzaWidget";
 import { useData } from "@/data/store";
 import { getLocalPorSlug, getCategoria } from "@/data/repo";
-import { googleMapsUrl, wazeUrl, whatsappUrl } from "@/lib/maps";
+import { googleMapsUrl, wazeUrl } from "@/lib/maps";
 import { ctaWhatsappUrl, getCtaConfig, isLocalPublico } from "@/lib/cta";
 
 export const Route = createFileRoute("/local/$slug")({

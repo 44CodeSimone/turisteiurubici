@@ -9,6 +9,7 @@ import { Field, TextInput, TextArea, StringListInput, Toggle, PrimaryButton, Gho
 
 export const Route = createFileRoute("/admin/planos")({
   component: AdminPlanos,
+  head: () => ({ meta: [{ title: "Planos — Admin | Turistei Urubici" }, { name: "robots", content: "noindex, nofollow" }] }),
 });
 
 function AdminPlanos() {

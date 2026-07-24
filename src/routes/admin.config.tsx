@@ -9,6 +9,7 @@ import { ImageInput } from "@/components/admin/ImageInput";
 
 export const Route = createFileRoute("/admin/config")({
   component: AdminConfig,
+  head: () => ({ meta: [{ title: "Configurações — Admin | Turistei Urubici" }, { name: "robots", content: "noindex, nofollow" }] }),
 });
 
 function AdminConfig() {
