@@ -9,6 +9,7 @@ import { Field, TextInput, TextArea, Toggle, PrimaryButton, GhostButton } from "
 
 export const Route = createFileRoute("/admin/categorias")({
   component: AdminCategorias,
+  head: () => ({ meta: [{ title: "Categorias — Admin | Turistei Urubici" }, { name: "robots", content: "noindex, nofollow" }] }),
 });
 
 function AdminCategorias() {

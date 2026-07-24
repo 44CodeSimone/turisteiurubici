@@ -4,6 +4,7 @@ import { useData, resetData } from "@/data/store";
 
 export const Route = createFileRoute("/admin/")({
   component: Dashboard,
+  head: () => ({ meta: [{ title: "Dashboard — Admin | Turistei Urubici" }, { name: "robots", content: "noindex, nofollow" }] }),
 });
 
 function Dashboard() {
